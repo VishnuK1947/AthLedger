@@ -1,15 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { ArrowRight, ChevronDown, Plus, Share } from 'lucide-react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useUser, UserButton } from '@clerk/nextjs'
 
-// Use relative paths if @ alias isn't working
 import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar'
 import { Button } from '../../components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card'
 import { Checkbox } from '../../components/ui/checkbox'
+import { Switch } from '../../components/ui/switch'
 import {
   Dialog,
   DialogContent,
@@ -29,6 +30,17 @@ import {
   TableHeader,
   TableRow,
 } from '../../components/ui/table'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '../../components/ui/alert-dialog'
 
 // Sample data for the metrics
 const metrics = [
@@ -82,7 +94,39 @@ const tableData = [
 ]
 
 export default function AthleteDashboard() {
-    const [selectedMetrics, setSelectedMetrics] = useState<string[]>([])
+  const [selectedMetrics, setSelectedMetrics] = useState<string[]>([])
+  const [privateMetrics, setPrivateMetrics] = useState<string[]>([])
+  const [tableRows, setTableRows] = useState(tableData)
+  const { user } = useUser()
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const toggleMetricPrivacy = (metricLabel: string) => {
+    setPrivateMetrics(current =>
+      current.includes(metricLabel)
+        ? current.filter(label => label !== metricLabel)
+        : [...current, metricLabel]
+    )
+  }
+
+  const handleCsvUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) {
+      // Here you would typically process the CSV file
+      console.log('CSV file uploaded:', file.name)
+      // Reset the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
+  }
+
+  const handleRevoke = (index: number) => {
+    setTableRows(current =>
+      current.map((row, i) =>
+        i === index ? { ...row, status: 'Revoked' } : row
+      )
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -127,13 +171,12 @@ export default function AthleteDashboard() {
               </DialogContent>
             </Dialog>
             <div className="flex items-center space-x-2">
-              <Avatar>
-                <AvatarImage alt="Profile" src="/placeholder-user.jpg" />
-                <AvatarFallback>KD</AvatarFallback>
-              </Avatar>
+              <UserButton afterSignOutUrl="/" />
               <div className="text-sm">
-                <div className="font-medium">Kevin Dukkon</div>
-                <div className="text-muted-foreground">kevin@strove.io</div>
+                <div className="font-medium">{user?.firstName || user?.username}</div>
+                <div className="text-muted-foreground">
+                  {user?.emailAddresses[0].emailAddress}
+                </div>
               </div>
             </div>
           </div>
@@ -141,18 +184,33 @@ export default function AthleteDashboard() {
       </header>
       <main className="p-4 md:p-6 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Hello, Balasore</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Hello, {user?.firstName || user?.username}
+          </h1>
         </div>
-        <Button variant="outline" className="w-full justify-start md:w-auto">
-          <Plus className="mr-2 h-4 w-4" />
-          Upload a CSV file
-        </Button>
+        <div>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleCsvUpload}
+            ref={fileInputRef}
+            className="hidden"
+          />
+          <Button
+            variant="outline"
+            className="w-full justify-start md:w-auto"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            Upload a CSV file
+          </Button>
+        </div>
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <svg
-                  className=" mr-2 h-4 w-4"
+                  className="mr-2 h-4 w-4"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -237,9 +295,16 @@ export default function AthleteDashboard() {
                         <div className="text-sm text-muted-foreground">{metric.label}</div>
                       </div>
                     </div>
-                    <div className="flex items-center">
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        checked={privateMetrics.includes(metric.label)}
+                        onCheckedChange={() => toggleMetricPrivacy(metric.label)}
+                      />
+                      <span className="text-sm font-medium">
+                        {privateMetrics.includes(metric.label) ? 'Private' : 'Public'}
+                      </span>
                       <span className="text-green-600">{metric.change}</span>
-                      <ChevronDown className="ml-2 h-4 w-4" />
+                      <ChevronDown className="h-4 w-4" />
                     </div>
                   </div>
                 ))}
@@ -261,7 +326,7 @@ export default function AthleteDashboard() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {tableData.map((row, index) => (
+                {tableRows.map((row, index) => (
                   <TableRow key={index}>
                     <TableCell className="font-medium">
                       <div className="flex items-center space-x-2">
@@ -280,6 +345,8 @@ export default function AthleteDashboard() {
                             ? 'bg-green-50 text-green-700'
                             : row.status === 'Pending'
                             ? 'bg-yellow-50 text-yellow-700'
+                            : row.status === 'Revoked'
+                            ? 'bg-red-50 text-red-700'
                             : 'bg-blue-50 text-blue-700'
                         }`}
                       >
@@ -288,9 +355,27 @@ export default function AthleteDashboard() {
                     </TableCell>
                     <TableCell>{row.amount}</TableCell>
                     <TableCell>
-                      <Button variant="destructive" size="sm">
-                        Revoke
-                      </Button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button variant="destructive" size="sm">
+                            Revoke
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              This action cannot be undone. This will permanently revoke access to the shared data.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleRevoke(index)}>
+                              Confirm Revoke
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </TableCell>
                   </TableRow>
                 ))}
