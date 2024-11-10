@@ -4,8 +4,15 @@ import { config } from './config/config';
 
 const app: Express = express();
 
-// Middleware
-app.use(cors());
+const corsOptions = {
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "svix-id", "svix-timestamp", "svix-signature"],
+    credentials: true,
+    optionsSuccessStatus: 204
+  };
+  
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

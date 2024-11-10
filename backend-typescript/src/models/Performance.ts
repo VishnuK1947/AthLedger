@@ -1,82 +1,64 @@
+// Performance.ts
 import mongoose, { Document, Schema, Model } from "mongoose";
 
-// Interface for the Performance document
-export interface IPerformance extends Document {
-  performanceId: string;
-  athleteUuid: string;
-  isPrivate: boolean;
-  metricName: string;
-  blockchainHash: string;
-  createdAt: Date;
-  updatedAt: Date;
+// Base interface for performance data
+export interface IPerformanceBase {
+  performanceId: string;
+  athleteUuid: string;
+  isPrivate: boolean;
+  metricName: string;
+  blockchainHash: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-// Interface for creating a new Performance (without the document methods)
-export interface IPerformanceInput {
-  performanceId: string;
-  athleteUuid: string;
-  isPrivate?: boolean;
-  metricName: string;
-  blockchainHash: string;
-}
+// Document interface
+export interface IPerformance extends IPerformanceBase, Document {}
 
-// Schema definition
-const performanceSchema = new Schema<IPerformance>(
-  {
-    performanceId: {
-      type: String,
-      required: true,
-      unique: true,
-      index: true,
-    },
-    athleteUuid: {
-      type: String,
-      required: true,
-      ref: "User",
-    },
-    isPrivate: {
-      type: Boolean,
-      required: true,
-      default: true,
-    },
-    metricName: {
-      type: String,
-      required: true,
-    },
-    blockchainHash: {
-      type: String,
-      required: true,
-    },
-  },
-  {
-    timestamps: true,
+// Input interface
+export interface IPerformanceInput extends Omit<IPerformanceBase, 'createdAt' | 'updatedAt'> {}
 
-    // Add type checking for mongoose methods
-    toJSON: {
-      transform: (_doc, ret) => {
-        ret.id = ret._id;
-        delete ret._id;
-        delete ret.__v;
-        return ret;
-      },
-    },
-  }
-);
+// Model interface
+export interface IPerformanceModel extends Model<IPerformance> {}
 
-// Add any instance methods here
-// performanceSchema.methods.someMethod = function(): Promise<void> {
-//   // Method implementation
-// };
-
-// Add any static methods here
-// performanceSchema.statics.someStaticMethod = function(): Promise<void> {
-//   // Static method implementation
-// };
+// Schema
+const performanceSchema = new Schema<IPerformance>({
+  performanceId: {
+    type: String,
+    required: true,
+    unique: true,
+    index: true,
+  },
+  athleteUuid: {
+    type: String,
+    required: true,
+    ref: "User",
+  },
+  isPrivate: {
+    type: Boolean,
+    required: true,
+    default: true,
+  },
+  metricName: {
+    type: String,
+    required: true,
+  },
+  blockchainHash: {
+    type: String,
+    required: true,
+  },
+}, {
+  timestamps: true,
+  toJSON: {
+    transform: (_doc, ret) => {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+      return ret;
+    },
+  },
+});
 
 // Create and export the model
-const Performance: Model<IPerformance> = mongoose.model<IPerformance>(
-  "Performance",
-  performanceSchema
-);
-
+const Performance = mongoose.model<IPerformance, IPerformanceModel>("Performance", performanceSchema);
 export default Performance;

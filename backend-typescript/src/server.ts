@@ -15,23 +15,34 @@ import webhookRoutes from "./routes/webhookRoutes";
 // Load environment variables
 dotenv.config();
 
-
-const app: Express = express();
+const corsOptions = {
+    origin: ["http://localhost:3000"], // React frontend
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "svix-id", "svix-timestamp", "svix-signature"],
+    credentials: true, // Allow credentials (cookies, authorization headers)
+    optionsSuccessStatus: 204 // Some legacy browsers choke on 204
+  };
+  
+  // Initialize express
+  const app: Express = express();
+  
+  // Apply CORS before other middleware
+  app.use(cors(corsOptions));
 
 // Webhook route needs raw body
 app.use('/api/webhooks/clerk', express.raw({ type: 'application/json' }));
 
 // Regular routes use JSON parsing
 app.use(express.json());
-app.use(cors());
 
 // Convert raw body to parsed JSON for webhook routes
 app.use('/api/webhooks/clerk', (req: Request, res: Response, next: NextFunction) => {
-  if (req.body) {
-    req.body = JSON.parse(req.body.toString());
-  }
-  next();
-});
+    if (req.body) {
+      req.body = JSON.parse(req.body.toString());
+    }
+    next();
+  });
+  
 
 // Routes
 app.use("/api/users", userRoutes);
@@ -51,25 +62,25 @@ class ApplicationError extends Error {
 
 // Interface for environment variables
 interface EnvironmentVariables {
-  NODE_ENV: string;
-  MONGODB_URI: string;
-  PORT: string | number;
-}
+    NODE_ENV: string;
+    MONGODB_URI: string;
+    PORT: string | number;
+    FRONTEND_URL?: string; // Add this for flexibility
+  }
 
 // Type guard for environment variables
 const validateEnv = (): EnvironmentVariables => {
-  if (!process.env.MONGODB_URI) {
-    throw new ApplicationError(
-      "MONGODB_URI is required in environment variables"
-    );
-  }
-
-  return {
-    NODE_ENV: process.env.NODE_ENV || "development",
-    MONGODB_URI: process.env.MONGODB_URI,
-    PORT: process.env.PORT || 5001,
-  };
-};
+    if (!process.env.MONGODB_URI) {
+      throw new ApplicationError("MONGODB_URI is required in environment variables");
+    }
+  
+    return {
+      NODE_ENV: process.env.NODE_ENV || "development",
+      MONGODB_URI: process.env.MONGODB_URI,
+      PORT: process.env.PORT || 5001,
+      FRONTEND_URL: process.env.FRONTEND_URL || "http://localhost:3000"
+    };
+  };
 
 // Response interfaces
 interface HealthCheckResponse {
