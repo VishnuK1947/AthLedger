@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { LineChart, ArrowUpRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
+import { useState } from "react"
+import { LineChart, ArrowUpRight } from "lucide-react"
+import Image from "next/image"
+import Link from "next/link"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Table,
   TableBody,
@@ -22,38 +22,40 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
+import { UserButton, useUser } from "@clerk/nextjs"
 
 export default function CompanyDashboard() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState("7d");
-  const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
+  const [selectedTimeRange, setSelectedTimeRange] = useState("7d")
+  const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null)
+  const { user } = useUser()
 
   const handleViewData = (athlete: string) => {
-    setSelectedAthlete(athlete);
-  };
+    setSelectedAthlete(athlete)
+  }
 
   const handleCompletePayment = (athlete: string) => {
-    console.log("Complete payment for", athlete);
+    console.log("Complete payment for", athlete)
     // Implement payment logic here
-  };
+  }
 
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="flex items-center justify-between bg-white p-4 shadow-sm">
         <nav className="flex space-x-4">
-          <Link href="/dashboard">
+          <Link href="/company" passHref>
             <Button variant="ghost" className="text-gray-900 font-semibold">
               Dashboard
             </Button>
           </Link>
-          <Link href="/marketplace">
+          <Link href="/marketplace" passHref>
             <Button variant="ghost" className="text-gray-500">
               Marketplace
             </Button>
@@ -61,16 +63,12 @@ export default function CompanyDashboard() {
         </nav>
         <div className="flex items-center space-x-4">
           <div className="flex items-center space-x-2">
-            <Image
-              src="/placeholder-user.jpg"
-              alt="Kevin Dukkon"
-              width={32}
-              height={32}
-              className="rounded-full"
-            />
+            <UserButton afterSignOutUrl="/" />
             <div className="text-sm">
-              <p className="font-medium">Kevin Dukkon</p>
-              <p className="text-gray-500">kevin@AthLedger.io</p>
+              <div className="font-medium">{user?.firstName || user?.username}</div>
+              <div className="text-muted-foreground">
+                {user?.emailAddresses[0].emailAddress}
+              </div>
             </div>
           </div>
         </div>
@@ -241,5 +239,5 @@ export default function CompanyDashboard() {
         </Card>
       </main>
     </div>
-  );
+  )
 }
