@@ -1,66 +1,113 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
+import { BarChart, User, Building2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function RoleSelection() {
-  const router = useRouter()
-  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedRole, setSelectedRole] = useState<"athlete" | "client" | null>(
+    null
+  );
 
-  const handleRoleSelection = async (role: 'athlete' | 'client') => {
+  const handleRoleSelection = async (role: "athlete" | "client") => {
     try {
-      setIsLoading(true)
-      
-      const response = await fetch('/api/user-role', {
-        method: 'POST',
+      setIsLoading(true);
+      setSelectedRole(role);
+
+      const response = await fetch("/api/user-role", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ role }),
-      })
+      });
 
       if (response.ok) {
-        // Redirect to correct path based on role
-        const redirectPath = role === 'athlete' ? '/dashboard' : '/company'
-        router.push(redirectPath)
+        const redirectPath = role === "athlete" ? "/dashboard" : "/company";
+        router.push(redirectPath);
       } else {
-        console.error('Failed to set user role')
+        console.error("Failed to set user role");
+        setSelectedRole(null);
       }
     } catch (error) {
-      console.error('Error setting user role:', error)
+      console.error("Error setting user role:", error);
+      setSelectedRole(null);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8">
-        <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold text-gray-900">
-            Select Your Role
-          </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Choose how you want to use AthLedger
-          </p>
-        </div>
-        <div className="mt-8 space-y-4">
-          <button
-            onClick={() => handleRoleSelection('athlete')}
-            disabled={isLoading}
-            className="w-full flex justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/20 to-background">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="flex justify-center mb-4"
           >
-            I am an Athlete
-          </button>
-          <button
-            onClick={() => handleRoleSelection('client')}
-            disabled={isLoading}
-            className="w-full flex justify-center py-4 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-          >
-            I am a Client
-          </button>
-        </div>
-      </div>
+            <BarChart className="h-12 w-12 text-primary" />
+          </motion.div>
+          <CardTitle className="text-3xl font-bold">
+            Welcome to AthleDger
+          </CardTitle>
+          <CardDescription>
+            Choose how you want to use our platform
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="outline"
+              size="lg"
+              className={`w-full py-8 text-left flex items-center ${
+                selectedRole === "athlete" ? "border-primary" : ""
+              }`}
+              onClick={() => handleRoleSelection("athlete")}
+              disabled={isLoading}
+            >
+              <User className="h-6 w-6 mr-4" />
+              <div>
+                <h3 className="font-semibold">I am an Athlete</h3>
+                <p className="text-sm text-muted-foreground">
+                  Track and manage your performance data
+                </p>
+              </div>
+            </Button>
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              variant="outline"
+              size="lg"
+              className={`w-full py-8 text-left flex items-center ${
+                selectedRole === "client" ? "border-primary" : ""
+              }`}
+              onClick={() => handleRoleSelection("client")}
+              disabled={isLoading}
+            >
+              <Building2 className="h-6 w-6 mr-4" />
+              <div>
+                <h3 className="font-semibold">I am a Client</h3>
+                <p className="text-sm text-muted-foreground">
+                  Track and manage your performance data
+                </p>
+              </div>
+            </Button>
+          </motion.div>
+        </CardContent>
+      </Card>
     </div>
-  )
+  );
 }

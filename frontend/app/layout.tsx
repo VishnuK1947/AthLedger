@@ -3,17 +3,17 @@ import {
   SignInButton,
   SignedIn,
   SignedOut,
-  UserButton
-} from '@clerk/nextjs'
-import './globals.css'
-import { AuthRedirect } from './components/auth/AuthRedirect'
-import { RoleProvider } from './components/providers/role-provider'
-import { UserProfile } from './components/UserProfile'
+  UserButton,
+} from "@clerk/nextjs";
+import "./globals.css";
+import { AuthRedirect } from "./components/auth/AuthRedirect";
+import { RoleProvider } from "./components/providers/role-provider";
+import { UserProfile } from "./components/UserProfile";
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <ClerkProvider>
@@ -24,15 +24,12 @@ export default function RootLayout({
               <AuthRedirect />
               {children}
             </SignedIn>
-            <SignedOut>
-              <CustomSignInButton />
-              {children}
-            </SignedOut>
+            <SignedOut>{children}</SignedOut>
           </body>
         </html>
       </RoleProvider>
     </ClerkProvider>
-  )
+  );
 }
 
 function CustomSignInButton() {
@@ -42,5 +39,5 @@ function CustomSignInButton() {
         Sign In
       </button>
     </SignInButton>
-  )
+  );
 }
