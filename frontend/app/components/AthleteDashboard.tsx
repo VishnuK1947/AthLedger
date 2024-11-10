@@ -52,8 +52,15 @@ import {
   ResponsiveContainer 
 } from 'recharts';
 
+interface Metric {
+  label: string
+  value: string
+  change: string
+  changeType: 'positive' | 'neutral' | 'negative'
+}
+
 // Sample data for the metrics
-const metrics = [
+const defaultMetrics: Metric[] = [
   { label: 'Average Heart Rate', value: '70 rpm', change: '+0.3%', changeType: 'neutral' },
   { label: 'Longest Jump', value: '23 m', change: '+0.1%', changeType: 'neutral' },
   { label: 'Running Speed', value: '18 mph', change: '+0.7%', changeType: 'positive' },
@@ -163,7 +170,31 @@ const tableData = [
   },
 ]
 
+const parseCSVAndUpdateMetrics = (csvContent: string): Metric[] => {
+  const lines = csvContent.split('\n');
+  
+  // Remove header row and empty lines
+  const dataRows = lines
+    .slice(1)
+    .filter(line => line.trim() !== '');
+  
+  // Parse CSV rows into metrics format
+  return dataRows.map(row => {
+    const [label, value, change, changeType] = row.split(',').map(item => item.trim());
+    return {
+      label,
+      value,
+      // Add '+' sign to positive changes if not already present
+      change: change.startsWith('-') ? change + '%' : (change.startsWith('+') ? change : '+' + change),
+      // Cast changeType to the correct type
+      changeType: (changeType as 'positive' | 'neutral' | 'negative')
+    };
+  });
+};
+
+
 export default function AthleteDashboard() {
+  const [metrics, setMetrics] = useState<Metric[]>(defaultMetrics)
   const [selectedMetrics, setSelectedMetrics] = useState<string[]>([])
   const [privateMetrics, setPrivateMetrics] = useState<string[]>([])
   const [tableRows, setTableRows] = useState(tableData)
@@ -181,8 +212,47 @@ export default function AthleteDashboard() {
   const handleCsvUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
-      // Here you would typically process the CSV file
-      console.log('CSV file uploaded:', file.name)
+      const reader = new FileReader();
+      
+      reader.onload = (e) => {
+        // Add null checks for both target and result
+        if (!e.target || typeof e.target.result !== 'string') {
+          console.error('Error reading file');
+          return;
+        }
+        
+        try {
+          const newMetrics = parseCSVAndUpdateMetrics(e.target.result);
+          setMetrics(currentMetrics => {
+            // Create a map of existing metrics by label for quick lookup
+            const existingMetricsMap = new Map(
+              currentMetrics.map(metric => [metric.label, metric])
+            );
+            
+            // Update existing metrics and add new ones
+            newMetrics.forEach(metric => {
+              existingMetricsMap.set(metric.label, metric);
+            });
+            
+            // Convert map back to array
+            return Array.from(existingMetricsMap.values());
+          });
+          
+          // Optional: Add success feedback
+          console.log('CSV file processed successfully');
+        } catch (error) {
+          console.error('Error parsing CSV:', error);
+          // Optional: Add error feedback to user
+        }
+      };
+      
+      reader.onerror = () => {
+        console.error('Error reading file');
+        // Optional: Add error feedback to user
+      };
+      
+      reader.readAsText(file);
+      
       // Reset the file input
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
