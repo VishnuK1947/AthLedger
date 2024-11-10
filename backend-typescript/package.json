@@ -7,12 +7,20 @@
   },
   "dependencies": {
     "@clerk/backend": "^1.16.0",
+    "@types/csv-parse": "^1.1.12",
+    "@types/multer": "^1.4.12",
+    "@types/uuid": "^10.0.0",
     "cors": "^2.8.5",
+    "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "ipfs-http-client": "^60.0.1",
     "mongoose": "^8.8.1",
+    "multer": "^1.4.5-lts.1",
+    "openai": "^4.71.1",
     "svix": "^1.39.0",
-    "uuid": "^11.0.2"
+    "uuid": "^11.0.2",
+    "web3": "^4.15.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
