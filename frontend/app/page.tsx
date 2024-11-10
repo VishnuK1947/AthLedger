@@ -294,57 +294,66 @@ export default function LandingPage() {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <TabsContent
-                    value="dashboard"
-                    className="bg-card rounded-lg shadow-lg p-6"
-                  >
-                    <h3 className="text-xl font-semibold mb-4">
-                      Athlete Dashboard
-                    </h3>
-                    <p className="mb-4">
-                      Manage your performance data and control access to your
-                      information with ease.
-                    </p>
-                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                      <p className="text-muted-foreground">
-                        Athlete Dashboard Demo Video
-                      </p>
-                    </div>
-                  </TabsContent>
-                  <TabsContent
-                    value="marketplace"
-                    className="bg-card rounded-lg shadow-lg p-6"
-                  >
-                    <h3 className="text-xl font-semibold mb-4">
-                      Data Marketplace
-                    </h3>
-                    <p className="mb-4">
-                      Discover how you can monetize your athletic data securely
-                      on our blockchain-powered marketplace.
-                    </p>
-                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                      <p className="text-muted-foreground">
-                        Data Marketplace Demo Video
-                      </p>
-                    </div>
-                  </TabsContent>
-                  <TabsContent
-                    value="analytics"
-                    className="bg-card rounded-lg shadow-lg p-6"
-                  >
-                    <h3 className="text-xl font-semibold mb-4">
-                      Performance Analytics
-                    </h3>
-                    <p className="mb-4">
-                      Gain valuable insights from your performance data with our
-                      advanced analytics tools.
-                    </p>
-                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                      <p className="text-muted-foreground">
-                        Performance Analytics Demo Video
-                      </p>
-                    </div>
-                  </TabsContent>
+                  {/* Previous imports remain the same */}
+{/* ... */}
+
+<TabsContent
+  value="dashboard"
+  className="bg-card rounded-lg shadow-lg p-6"
+>
+  <h3 className="text-xl font-semibold mb-4">
+    Athlete Dashboard
+  </h3>
+  <p className="mb-4">
+    Manage your performance data and control access to your
+    information with ease.
+  </p>
+  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+    <img
+      src="/landing/athlete_athledger.png"
+      alt="Athlete Dashboard Interface"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</TabsContent>
+<TabsContent
+  value="marketplace"
+  className="bg-card rounded-lg shadow-lg p-6"
+>
+  <h3 className="text-xl font-semibold mb-4">
+    Data Marketplace
+  </h3>
+  <p className="mb-4">
+    Discover how you can monetize your athletic data securely
+    on our blockchain-powered marketplace.
+  </p>
+  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+    <img
+      src="/landing/marketplace_athledger.png"
+      alt="Data Marketplace Interface"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</TabsContent>
+<TabsContent
+  value="analytics"
+  className="bg-card rounded-lg shadow-lg p-6"
+>
+  <h3 className="text-xl font-semibold mb-4">
+    Performance Analytics
+  </h3>
+  <p className="mb-4">
+    Gain valuable insights from your performance data with our
+    advanced analytics tools.
+  </p>
+  <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+    <img
+      src="/landing/company_athledger.png"
+      alt="Performance Analytics Interface"
+      className="w-full h-full object-cover"
+    />
+  </div>
+</TabsContent>
                 </motion.div>
               </AnimatePresence>
             </Tabs>
