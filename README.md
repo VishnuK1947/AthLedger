@@ -1,6 +1,6 @@
-# AthleDger 🏃‍♂️ 🔗
+# AthLedger 🏃‍♂️ 🔗
 
-AthleDger is a blockchain-powered platform that empowers athletes to securely store, manage, and monetize their performance data through a decentralized ledger system, ensuring complete transparency and control over their information.
+AthLedger is a blockchain-powered platform that empowers athletes to securely store, manage, and monetize their performance data through a decentralized ledger system, ensuring complete transparency and control over their information.
 
 ## What We Offer 🌟
 
@@ -46,4 +46,4 @@ AthleDger is a blockchain-powered platform that empowers athletes to securely st
 
 ## Our Vision 🎯
 
-AthleDger aims to revolutionize how athletic data is shared and monetized. We believe athletes should have complete control over their performance data and the ability to benefit from sharing it. Our platform ensures transparency, security, and fair compensation for valuable athletic insights.
+AthLedger aims to revolutionize how athletic data is shared and monetized. We believe athletes should have complete control over their performance data and the ability to benefit from sharing it. Our platform ensures transparency, security, and fair compensation for valuable athletic insights.
