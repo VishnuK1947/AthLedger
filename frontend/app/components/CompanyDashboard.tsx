@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { LineChart, ArrowUpRight } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
+import { useState } from "react";
+import { LineChart, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -14,22 +14,35 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+} from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function CompanyDashboard() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState('7d')
-  const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null)
+  const [selectedTimeRange, setSelectedTimeRange] = useState("7d");
+  const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
 
   const handleViewData = (athlete: string) => {
-    setSelectedAthlete(athlete)
-  }
+    setSelectedAthlete(athlete);
+  };
 
   const handleCompletePayment = (athlete: string) => {
-    console.log("Complete payment for", athlete)
+    console.log("Complete payment for", athlete);
     // Implement payment logic here
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -57,7 +70,7 @@ export default function CompanyDashboard() {
             />
             <div className="text-sm">
               <p className="font-medium">Kevin Dukkon</p>
-              <p className="text-gray-500">kevin@athledger.io</p>
+              <p className="text-gray-500">kevin@AthLedger.io</p>
             </div>
           </div>
         </div>
@@ -65,7 +78,7 @@ export default function CompanyDashboard() {
 
       <main className="p-6 space-y-6">
         <h1 className="text-3xl font-bold">Hello, Kevin</h1>
-        
+
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
@@ -73,7 +86,10 @@ export default function CompanyDashboard() {
                 <LineChart className="h-5 w-5 inline mr-2" />
                 Amount Spent
               </CardTitle>
-              <Select value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+              <Select
+                value={selectedTimeRange}
+                onValueChange={setSelectedTimeRange}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select time range" />
                 </SelectTrigger>
@@ -156,7 +172,10 @@ export default function CompanyDashboard() {
                   </TableCell>
                   <TableCell>$7,104.24</TableCell>
                   <TableCell>
-                    <Button size="sm" onClick={() => handleCompletePayment("Stripe Inc.")}>
+                    <Button
+                      size="sm"
+                      onClick={() => handleCompletePayment("Stripe Inc.")}
+                    >
                       Complete Payment
                     </Button>
                   </TableCell>
@@ -181,9 +200,9 @@ export default function CompanyDashboard() {
                   <TableCell>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button 
-                          size="sm" 
-                          variant="outline" 
+                        <Button
+                          size="sm"
+                          variant="outline"
                           onClick={() => handleViewData("Square Cash")}
                         >
                           View Data
@@ -191,8 +210,12 @@ export default function CompanyDashboard() {
                       </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
-                          <DialogTitle>Athlete Data: {selectedAthlete}</DialogTitle>
-                          <DialogDescription>Asian Games Jump Performance Data</DialogDescription>
+                          <DialogTitle>
+                            Athlete Data: {selectedAthlete}
+                          </DialogTitle>
+                          <DialogDescription>
+                            Asian Games Jump Performance Data
+                          </DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                           <div className="grid grid-cols-2 items-center gap-4">
@@ -218,5 +241,5 @@ export default function CompanyDashboard() {
         </Card>
       </main>
     </div>
-  )
+  );
 }

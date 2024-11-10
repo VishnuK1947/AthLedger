@@ -55,45 +55,45 @@ const testimonials = [
     name: "Michael Johnson",
     role: "Olympic Athlete",
     content:
-      "AthleDger has revolutionized how I track and manage my performance data. The blockchain security gives me peace of mind.",
+      "AthLedger has revolutionized how I track and manage my performance data. The blockchain security gives me peace of mind.",
     avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     name: "Sarah Thompson",
     role: "Sports Agent",
     content:
-      "As an agent, AthleDger provides invaluable insights into my clients' performances. It's a game-changer in athlete management.",
+      "As an agent, AthLedger provides invaluable insights into my clients' performances. It's a game-changer in athlete management.",
     avatar: "/placeholder.svg?height=40&width=40",
   },
   {
     name: "David Chen",
     role: "Team Coach",
     content:
-      "The data analytics provided by AthleDger have significantly improved our team's training strategies and overall performance.",
+      "The data analytics provided by AthLedger have significantly improved our team's training strategies and overall performance.",
     avatar: "/placeholder.svg?height=40&width=40",
   },
 ];
 
 const faqItems = [
   {
-    question: "What is AthleDger?",
+    question: "What is AthLedger?",
     answer:
-      "AthleDger is a blockchain-powered platform that allows athletes to securely store, manage, and monetize their performance data. It provides a decentralized ledger system ensuring complete transparency and control over athletic information.",
+      "AthLedger is a blockchain-powered platform that allows athletes to securely store, manage, and monetize their performance data. It provides a decentralized ledger system ensuring complete transparency and control over athletic information.",
   },
   {
-    question: "How does AthleDger ensure data security?",
+    question: "How does AthLedger ensure data security?",
     answer:
-      "AthleDger uses blockchain technology to create a secure, immutable record of all data transactions. This ensures that your performance data is protected from unauthorized access or tampering.",
+      "AthLedger uses blockchain technology to create a secure, immutable record of all data transactions. This ensures that your performance data is protected from unauthorized access or tampering.",
   },
   {
     question: "Can I control who sees my data?",
     answer:
-      "Yes, AthleDger gives you full control over your data. You can choose to keep your data private, share it with specific individuals or organizations, or make it public for potential monetization opportunities.",
+      "Yes, AthLedger gives you full control over your data. You can choose to keep your data private, share it with specific individuals or organizations, or make it public for potential monetization opportunities.",
   },
   {
     question: "How can I monetize my athletic data?",
     answer:
-      "AthleDger provides a marketplace where you can securely sell or license your performance data to interested parties such as sports teams, researchers, or brands. You set the terms and pricing for your data.",
+      "AthLedger provides a marketplace where you can securely sell or license your performance data to interested parties such as sports teams, researchers, or brands. You set the terms and pricing for your data.",
   },
 ];
 
@@ -134,7 +134,7 @@ export default function LandingPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               <BarChart className="h-8 w-8 text-primary" />
-              <span className="ml-2 text-xl font-semibold">AthleDger</span>
+              <span className="ml-2 text-xl font-semibold">AthLedger</span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-4">
@@ -192,7 +192,7 @@ export default function LandingPage() {
             >
               <h1 className="text-4xl font-bold tracking-tight sm:text-6xl">
                 Empower Your Athletic Journey with{" "}
-                <span className="text-primary">AthleDger</span>
+                <span className="text-primary">AthLedger</span>
               </h1>
               <p className="mt-6 text-lg leading-8 text-muted-foreground">
                 Securely store, manage, and monetize your performance data with
@@ -222,7 +222,7 @@ export default function LandingPage() {
                 Revolutionize Your Athletic Data Management
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                AthleDger combines cutting-edge blockchain technology with
+                AthLedger combines cutting-edge blockchain technology with
                 intuitive design to help you take control of your performance
                 data.
               </p>
@@ -258,10 +258,10 @@ export default function LandingPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                See AthleDger in Action
+                See AthLedger in Action
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                Experience the power and simplicity of AthleDger with our
+                Experience the power and simplicity of AthLedger with our
                 interactive demo videos.
               </p>
             </div>
@@ -352,7 +352,7 @@ export default function LandingPage() {
                 What Athletes Say
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                Discover how AthleDger is transforming the way athletes manage
+                Discover how AthLedger is transforming the way athletes manage
                 their data and careers.
               </p>
             </div>
@@ -399,7 +399,7 @@ export default function LandingPage() {
                 Frequently Asked Questions
               </h2>
               <p className="mt-4 text-lg text-muted-foreground">
-                Find answers to common questions about AthleDger.
+                Find answers to common questions about AthLedger.
               </p>
             </div>
             <div className="max-w-3xl mx-auto">
@@ -435,7 +435,7 @@ export default function LandingPage() {
             </h2>
             <p className="mt-4 text-lg text-primary-foreground/80">
               Join thousands of athletes who are already benefiting from
-              AthleDger. Start your journey today.
+              AthLedger. Start your journey today.
             </p>
             <form
               onSubmit={handleSubmit}
@@ -480,7 +480,7 @@ export default function LandingPage() {
           <div className="flex flex-col items-center justify-between sm:flex-row">
             <div className="flex items-center">
               <BarChart className="h-8 w-8 text-primary" />
-              <span className="ml-2 text-xl font-semibold">AthleDger</span>
+              <span className="ml-2 text-xl font-semibold">AthLedger</span>
             </div>
             <nav className="mt-4 flex items-center space-x-4 sm:mt-0">
               <a
@@ -504,7 +504,7 @@ export default function LandingPage() {
             </nav>
           </div>
           <div className="mt-8 text-center text-sm text-muted-foreground">
-            © 2024 AthleDger. All rights reserved.
+            © 2024 AthLedger. All rights reserved.
           </div>
         </div>
       </footer>
