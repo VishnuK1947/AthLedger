@@ -1,0 +1,12 @@
+{
+  "project-id": "convert-csv-to-json",
+  "api-key": "sk_agent_65_0_3qDjenA34ZcQViV6EkbFZkHSUjVLv3fv6h9TtreuntMncNFvZxSZ2EBbBcgStht5mtM9gy3DNRHQrEXKmQYdW6vQ",
+  "main-file": "src/index.ts",
+  "static-dir": "static",
+  "out-dir": "dist",
+  "environment": "development",
+  "version": "1.0.0",
+  "tunnel-base-url": "wss:///tunnel.dain-local.com",
+  "platform-base-url": "https://platform.dain.org",
+  "runtime": "node"
+}
