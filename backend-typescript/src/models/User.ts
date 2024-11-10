@@ -92,7 +92,7 @@ const userSchema = new Schema<IUser>(
 );
 
 // Add indexes for common queries
-userSchema.index({ email: 1 });
+userSchema.index({ email: 1 }, { unique: true });
 userSchema.index({ username: 1 });
 userSchema.index({ isAthlete: 1 });
 

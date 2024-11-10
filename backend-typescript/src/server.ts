@@ -1,18 +1,45 @@
+// server.ts
 import express, { Express, Request, Response, NextFunction } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-// Change in server.ts
-import { ILayer } from "express-serve-static-core";
 
 // Import routes
 import userRoutes from "./routes/userRoutes";
 import performanceRoutes from "./routes/performanceRoutes";
 import transactionRoutes from "./routes/transactionRoutes";
 import groupedPerformanceRoutes from "./routes/groupedPerformanceRoutes";
+import webhookRoutes from "./routes/webhookRoutes";
 
+// Add this before your error handling middleware
 // Load environment variables
 dotenv.config();
+
+
+const app: Express = express();
+
+// Webhook route needs raw body
+app.use('/api/webhooks/clerk', express.raw({ type: 'application/json' }));
+
+// Regular routes use JSON parsing
+app.use(express.json());
+app.use(cors());
+
+// Convert raw body to parsed JSON for webhook routes
+app.use('/api/webhooks/clerk', (req: Request, res: Response, next: NextFunction) => {
+  if (req.body) {
+    req.body = JSON.parse(req.body.toString());
+  }
+  next();
+});
+
+// Routes
+app.use("/api/users", userRoutes);
+app.use("/api/performance", performanceRoutes);
+app.use("/api/transactions", transactionRoutes);
+app.use("/api/grouped-performances", groupedPerformanceRoutes);
+app.use("/api/webhooks", webhookRoutes);
+
 
 // Custom error class for application errors
 class ApplicationError extends Error {

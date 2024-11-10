@@ -125,6 +125,14 @@ class UserController {
     }
   }
 
+  async getUserByEmail(email: string): Promise<IUser | null> {
+    try {
+      return await this.model.findOne({ email });
+    } catch (error) {
+      throw this.handleError(error);
+    }
+  }
+
   // Remove performance from public metrics
   async removePublicMetric(
     uuid: string,
