@@ -1,24 +1,22 @@
-'use client'
+"use client";
 
-'use client'
-
-import { useState } from "react"
-import { ArrowUpRight } from "lucide-react"
-import Image from "next/image"
-import Link from "next/link"
-import { LineChart as LineChartIcon } from "lucide-react"
-import { 
+import { useState, useEffect } from "react";
+import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { LineChart as LineChartIcon } from "lucide-react";
+import {
   LineChart as RechartsLineChart,
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts'
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -26,7 +24,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -34,39 +32,93 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { UserButton, useUser } from "@clerk/nextjs"
+} from "@/components/ui/select";
+import { UserButton, useUser } from "@clerk/nextjs";
+import { ethers } from "ethers";
+//import { useToast } from "@/components/ui/use-toast";
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 const spendingData = [
-  { date: 'Jan 1', amount: 4500 },
-  { date: 'Jan 8', amount: 5200 },
-  { date: 'Jan 15', amount: 4800 },
-  { date: 'Jan 22', amount: 6100 },
-  { date: 'Jan 29', amount: 5700 },
-  { date: 'Feb 5', amount: 6500 },
-  { date: 'Feb 12', amount: 7200 },
+  { date: "Jan 1", amount: 4500 },
+  { date: "Jan 8", amount: 5200 },
+  { date: "Jan 15", amount: 4800 },
+  { date: "Jan 22", amount: 6100 },
+  { date: "Jan 29", amount: 5700 },
+  { date: "Feb 5", amount: 6500 },
+  { date: "Feb 12", amount: 7200 },
 ];
 
 export default function CompanyDashboard() {
-  const [selectedTimeRange, setSelectedTimeRange] = useState("7d")
-  const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null)
-  const { user } = useUser()
+  const [selectedTimeRange, setSelectedTimeRange] = useState("7d");
+  const [selectedAthlete, setSelectedAthlete] = useState<string | null>(null);
+  const [totalSpent, setTotalSpent] = useState(40000);
+  const [currentPeriod, setCurrentPeriod] = useState(7200);
+  const { user } = useUser();
+  //const { toast } = 'useToast()';
 
   const handleViewData = (athlete: string) => {
-    setSelectedAthlete(athlete)
-  }
+    setSelectedAthlete(athlete);
+  };
 
-  const handleCompletePayment = (athlete: string) => {
-    console.log("Complete payment for", athlete)
-    // Implement payment logic here
-  }
+  const handleCompletePayment = async (athlete: string) => {
+    try {
+      // Check if MetaMask is installed
+      if (typeof window.ethereum === "undefined") {
+        alert("Please install MetaMask to make payments");
+        return;
+      }
+
+      try {
+        // This will trigger the MetaMask popup to connect if not connected
+        await window.ethereum.request({
+          method: "wallet_requestPermissions",
+          params: [{ eth_accounts: {} }],
+        });
+      } catch (error) {
+        console.log("Permission denied");
+        return;
+      }
+
+      // Request account access - this will show MetaMask if not already connected
+      const accounts = await window.ethereum.request({
+        method: "eth_requestAccounts",
+      });
+
+      // Create a Web3 provider
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+
+      // Create the transaction (using a demo recipient address)
+      const transaction = {
+        to: "0xc295e37debbe23229470b9874674454a27f59f41", // Demo recipient address
+        value: ethers.parseEther("0.01"), // Small amount for demo
+        gasLimit: "21000", // Basic ETH transfer gas limit
+      };
+
+      // This will trigger the MetaMask popup for transaction confirmation
+      const tx = await signer.sendTransaction(transaction);
+
+      // Wait for the transaction to be mined
+      //await tx.wait();
+
+      alert("Payment successful!");
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Transaction failed or was cancelled");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -87,10 +139,8 @@ export default function CompanyDashboard() {
           <div className="flex items-center space-x-2">
             <UserButton afterSignOutUrl="/" />
             <div className="text-sm">
-              <div className="font-medium">{user?.firstName || user?.username}</div>
-              <div className="text-muted-foreground">
-                {user?.emailAddresses[0].emailAddress}
-              </div>
+              <div className="font-medium">{"Nike"}</div>
+              <div className="text-muted-foreground">{"outreach@nike.com"}</div>
             </div>
           </div>
         </div>
@@ -100,7 +150,7 @@ export default function CompanyDashboard() {
         <h1 className="text-3xl font-bold">Hello, Kevin</h1>
 
         <div className="grid gap-6 md:grid-cols-2">
-        <Card className="h-fit">
+          <Card className="h-fit">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-lg font-medium">
                 <LineChartIcon className="h-5 w-5 inline mr-2" />
@@ -120,36 +170,38 @@ export default function CompanyDashboard() {
                     <SelectItem value="90d">From last 90 days</SelectItem>
                   </SelectContent>
                 </Select>
-                <span className="text-sm text-green-600 font-medium">+15.3%</span>
+                <span className="text-sm text-green-600 font-medium">
+                  +15.3%
+                </span>
               </div>
             </CardHeader>
             <CardContent className="space-y-4 pb-4">
               <div className="h-[200px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <RechartsLineChart data={spendingData}>
-                    <CartesianGrid 
-                      strokeDasharray="3 3" 
+                    <CartesianGrid
+                      strokeDasharray="3 3"
                       vertical={false}
                       stroke="#E5E7EB"
                     />
-                    <XAxis 
-                      dataKey="date" 
+                    <XAxis
+                      dataKey="date"
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: '#6B7280', fontSize: 12 }}
+                      tick={{ fill: "#6B7280", fontSize: 12 }}
                     />
-                    <YAxis 
+                    <YAxis
                       axisLine={false}
                       tickLine={false}
-                      tick={{ fill: '#6B7280', fontSize: 12 }}
+                      tick={{ fill: "#6B7280", fontSize: 12 }}
                       tickFormatter={(value) => `$${value}`}
                     />
                     <Tooltip
-                      formatter={(value) => [`$${value}`, 'Amount']}
+                      formatter={(value) => [`$${value}`, "Amount"]}
                       contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #E5E7EB',
-                        borderRadius: '6px',
+                        backgroundColor: "white",
+                        border: "1px solid #E5E7EB",
+                        borderRadius: "6px",
                       }}
                     />
                     <Line
@@ -157,7 +209,7 @@ export default function CompanyDashboard() {
                       dataKey="amount"
                       stroke="#8B5CF6"
                       strokeWidth={2}
-                      dot={{ fill: '#8B5CF6', strokeWidth: 2 }}
+                      dot={{ fill: "#8B5CF6", strokeWidth: 2 }}
                     />
                   </RechartsLineChart>
                 </ResponsiveContainer>
@@ -165,11 +217,15 @@ export default function CompanyDashboard() {
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div>
                   <p className="text-sm text-gray-500">Total Spent</p>
-                  <p className="text-2xl font-bold">$40,000</p>
+                  <p className="text-2xl font-bold">
+                    ${totalSpent.toLocaleString()}
+                  </p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-500">Current Period</p>
-                  <p className="text-2xl font-bold">$7,200</p>
+                  <p className="text-2xl font-bold">
+                    ${currentPeriod.toLocaleString()}
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -228,7 +284,7 @@ export default function CompanyDashboard() {
                       <div className="w-8 h-8 bg-purple-600 rounded-md flex items-center justify-center text-white font-bold">
                         S
                       </div>
-                      <span>Stripe Inc.</span>
+                      <span>Vishnu Swarup</span>
                     </div>
                   </TableCell>
                   <TableCell>Highest Jump</TableCell>
@@ -309,5 +365,5 @@ export default function CompanyDashboard() {
         </Card>
       </main>
     </div>
-  )
+  );
 }

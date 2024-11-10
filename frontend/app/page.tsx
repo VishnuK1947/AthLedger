@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link as ScrollLink, Element } from "react-scroll";
+import { SignInButton } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -126,6 +127,10 @@ export default function LandingPage() {
     }
   };
 
+  const SignInTrigger = ({ children }: { children: React.ReactNode }) => (
+    <SignInButton mode="modal">{children}</SignInButton>
+  );
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Navigation */}
@@ -173,9 +178,11 @@ export default function LandingPage() {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button size="sm" className="rounded-full">
-                Connect Wallet
-              </Button>
+              <SignInTrigger>
+                <Button size="sm" className="rounded-full">
+                  Connect Wallet
+                </Button>
+              </SignInTrigger>
             </div>
           </div>
         </div>
@@ -200,10 +207,12 @@ export default function LandingPage() {
                 never before.
               </p>
               <div className="mt-10 flex items-center justify-center gap-x-6">
-                <Button size="lg" className="rounded-full">
-                  Get Started
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <SignInTrigger>
+                  <Button size="lg" className="rounded-full">
+                    Get Started
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </SignInTrigger>
                 <Button variant="outline" size="lg" className="rounded-full">
                   Watch Demo
                 </Button>
@@ -437,39 +446,11 @@ export default function LandingPage() {
               Join thousands of athletes who are already benefiting from
               AthLedger. Start your journey today.
             </p>
-            <form
-              onSubmit={handleSubmit}
-              className="mt-8 flex flex-col items-center sm:flex-row sm:justify-center"
-            >
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={handleEmailChange}
-                className={`w-full sm:w-64 text-foreground rounded-full ${
-                  !isEmailValid ? "border-red-500" : ""
-                }`}
-              />
-              <Button
-                type="submit"
-                size="lg"
-                className="mt-3 w-full sm:mt-0 sm:ml-3 sm:w-auto rounded-full"
-              >
-                {isSubmitted ? (
-                  <>
-                    <Check className="mr-2 h-4 w-4" />
-                    Submitted
-                  </>
-                ) : (
-                  "Get Early Access"
-                )}
+            <SignInTrigger>
+              <Button size="lg" className="mt-8 rounded-full">
+                Get Started Now
               </Button>
-            </form>
-            {!isEmailValid && (
-              <p className="mt-2 text-sm text-red-400">
-                Please enter a valid email address.
-              </p>
-            )}
+            </SignInTrigger>
           </div>
         </div>
       </section>
